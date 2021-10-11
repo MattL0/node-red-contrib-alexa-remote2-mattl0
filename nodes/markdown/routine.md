@@ -1,0 +1,42 @@
+Emulates Alexa Routine behaviour.
+
+---
+
+### **Info**
+
+- Echo devices can be referenced by id or name (not case sensitive)
+- Announcement and SSML speak options will speak to all devices if you don't specify any device (does not work with *Speak At Volume*)
+- **Speak At Volume** or **Volume** with the *Add* mode can only change the volume if the echo has recently been active playing music!
+
+- With the **Custom** option, you can feed in a routine node as js object for completely dynamic routines. The objects can look like this:
+  - ```{ type: 'speak', payload: { type: 'regular', text: 'Hello!', devices: ['My Echo']}```
+  - ```{ type: 'speakAtVolume', payload: { type: 'regular', text: 'Hello!', volume: 50 devices: ['My Echo']}```
+    - type: `regular`, `ssml`, `announcement` 
+    - devices: string or array, can be falsy to send to all devices (only for type speak with announcement or ssml type)
+  - ```{ type: 'stop', payload: { devices: ['My Echo']}```
+  - ```{ type: 'stop', payload: { devices: ['My Echo']}```
+  - ```{ type: 'prompt', payload: { type: 'goodMorning', devices: ['My Echo']}```
+    - prompt: `goodMorning`, `weather`, `traffic`, `flashBriefing`, `singSong`, `joke`, `tellStory`, `calendarToday`, `calendarTomorrow`, `calendarNext`, `funFact`, `cleanUp`, `imHome`
+  - ```{ type: 'phrase', payload: { category: 'confirmations', devices: ['My Echo']}```
+    - category: `birthday`, `compliments`, `confirmations`, `goodbye`, `goodmorning`, `goodnight`, `iamhome`
+  - ```{ type: 'volume', payload: { value: 50, devices: ['My Echo']}```
+    - value 0..100
+  - ```{ type: 'music', payload: { provider: 'AMAZON_MUSIC', search: '', device: 'My Echo', duration: 300}```
+    - provider: `AMAZON_MUSIC`, `TUNEIN`, `CLOUDPLAYER`, `SPOTIFY`
+    - duration is optional
+  - ```{ type: 'wait', payload: { time: 3 }``` 
+    - time in seconds 
+  - ```{ type: 'smarthome', payload: { entity: 'Lamp', action: 'setColor', value: '#FF00FF' }``` *(seconds)*
+    - entity can be an id or name (case insensitive) 
+    - action: `turnOn`, `turnOff`, `setColor`, `setColorTemperature`, `setBrightness`, `setPercentage`, `lockAction`, `setTargetTemperature`
+  - ```{ type: 'routine', payload: { routine: 'hello' }```
+    - routine can be an id or utterance (case insensitive)
+  - ```{ type: 'pushNotification', payload: { text: 'Hello from Node-RED!', title: 'Node-RED' }```  
+  - ```{ type: 'node', payload: { type: 'serial', children: [ { type: 'speak', payload: {...}}] }```  
+    - type: `serial`, `parallel`
+
+---
+
+### **References**
+ - [npm](https://npmjs.com/package/node-red-contrib-alexa-remote-fork) - the nodes npm repository
+ - [GitHub](https://github.com/hgross/node-red-contrib-alexa-remote-fork) - the nodes GitHub repository

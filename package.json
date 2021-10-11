@@ -1,0 +1,35 @@
+{
+  "name": "node-red-contrib-alexa-remote2-mattl0",
+  "version": "3.9.0",
+  "author": "Matt L0",
+  "description": "node-red nodes for interacting with alexa",
+  "keywords": [
+    "node-red",
+    "alexa remote",
+    "alexa",
+    "echo"
+  ],
+  "license": "MIT",
+  "node-red": {
+    "nodes": {
+      "alexa-remote-account": "nodes/alexa-remote-account.js",
+      "alexa-remote-init": "nodes/alexa-remote-init.js",
+      "alexa-remote-event": "nodes/alexa-remote-event.js",
+      "alexa-remote-smarthome": "nodes/alexa-remote-smarthome.js",
+      "alexa-remote-routine": "nodes/alexa-remote-routine.js",
+      "alexa-remote-echo": "nodes/alexa-remote-echo.js",
+      "alexa-remote-other": "nodes/alexa-remote-other.js",
+      "alexa-remote-list": "nodes/alexa-remote-list.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattL0/node-red-contrib-alexa-remote2-mattl0.git"
+  },
+  "bugs": {
+    "url": "https://github.com/586837r/node-red-contrib-alexa-remote2/issues"
+	},
+	"dependencies": {
+		"alexa-remote2": "Apollon77/alexa-remote"
+	}
+}
