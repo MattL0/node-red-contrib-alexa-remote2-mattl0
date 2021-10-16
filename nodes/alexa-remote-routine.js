@@ -21,7 +21,7 @@ module.exports = function (RED) {
 			const evaluated = tools.nodeEvaluateProperties(RED, this, msg, this.routineNode);
 			const customerId = alexa.ownerCustomerId;
 			const locale = this.account.locale || 'en-US';
-
+            const onKeyword = this.account.onKeywordInLanguage || '';
 			const deviceToVolume = new Map();
 
 			function nativizePromptType(prompt) {
@@ -52,9 +52,9 @@ module.exports = function (RED) {
 			const findAll = (ids, depth = 1) => {
 				let devices = [];
 				for (const id of ids) {
-					if (id === 'ALEXA_ALL_DSN') return [{ 
-						serialNumber: 'ALEXA_ALL_DSN', 
-						deviceType: 'ALEXA_ALL_DEVICE_TYPE', 
+					if (id === 'ALEXA_ALL_DSN') return [{
+						serialNumber: 'ALEXA_ALL_DSN',
+						deviceType: 'ALEXA_ALL_DEVICE_TYPE',
 						clusterMembers: [],
 						deviceOwnerCustomerId: customerId,
 					}];
@@ -62,7 +62,7 @@ module.exports = function (RED) {
 
 					if (device.clusterMembers.length !== 0 && depth !== 0) {
 						// we are dealing with a group so we seperate it into members because
-						// groups don't work	
+						// groups don't work
 						const members = findAll(device.clusterMembers, depth - 1);
 						devices = devices.concat(members);
 					}
@@ -185,7 +185,7 @@ module.exports = function (RED) {
 								}
 							});
 						}
-						
+
 						if(node.payload.mode === 'add') {
 							return await nativizeNode({
 								type: 'node',
@@ -268,6 +268,42 @@ module.exports = function (RED) {
 								}
 							});
 						}
+					}
+					case 'textCommand': {
+						if (!Array.isArray(node.payload.devices)) {
+							const single = node.payload.devices || node.payload.device;
+							node.payload.devices = single ? [single] : [];
+						}
+						checkPayload({ text: '' });
+						const devices = findAll(node.payload.devices);
+
+						if (devices.length === 0) return undefined;
+						if (devices.length === 1) return {
+							'@type': 'com.amazon.alexa.behaviors.model.OpaquePayloadOperationNode',
+							type: 'Alexa.TextCommand',
+							skillId: 'amzn1.ask.1p.tellalexa',
+							operationPayload: {
+								deviceType: devices[0].deviceType,
+								deviceSerialNumber: devices[0].serialNumber,
+								locale: locale,
+								customerId: devices[0].deviceOwnerCustomerId,
+								text: node.payload.text
+							}
+						};
+
+						return await nativizeNode({
+							type: 'node',
+							payload: {
+								type: 'parallel',
+								children: devices.map(device => ({
+									type: 'textCommand',
+									payload: {
+										text: node.payload.text,
+										device: device,
+									}
+								}))
+							}
+						});
 					}
 					case 'stop': {
 						if (!Array.isArray(node.payload.devices)) node.payload.devices = [node.payload.devices || node.payload.device];
@@ -398,7 +434,7 @@ module.exports = function (RED) {
 						const devices = findAll(node.payload.devices);
 						if (devices.length === 0) return undefined;
 
-						if(node.payload.mode === 'add') 
+						if(node.payload.mode === 'add')
 						{
 							let devicesWithVolume = [];
 
@@ -407,9 +443,9 @@ module.exports = function (RED) {
 									devicesWithVolume.push(device);
 									continue;
 								}
-	
+
 								const media = await alexa.getMediaPromise(device);
-	
+
 								if (tools.matches(media, { volume: 50 })) {
 									deviceToVolume.set(device, media.volume);
 									devicesWithVolume.push(device);
@@ -445,7 +481,7 @@ module.exports = function (RED) {
 									value: volume,
 								}
 							};
-	
+
 							return await nativizeNode({
 								type: 'node',
 								payload: {
@@ -465,13 +501,26 @@ module.exports = function (RED) {
 						checkPayload({ device: undefined, provider: '', search: '' });
 						const device = find(node.payload.device);
 
+						var searchPhrase = node.payload.search;
+						var deviceType = device.deviceType;
+						var deviceSerialNumber = device.serialNumber;
+
+						if (device.deviceFamily == 'WHA') {
+							const firstClusterDevice = find(device.clusterMembers[0]);
+
+							searchPhrase = searchPhrase + ' ' + onKeyword + ' ' + device.accountName;
+							deviceType = firstClusterDevice.deviceType;
+							deviceSerialNumber = firstClusterDevice.serialNumber;
+						}
+
+
 						const operationPayload = {
-							deviceType: device.deviceType,
-							deviceSerialNumber: device.serialNumber,
+							deviceType: deviceType,
+							deviceSerialNumber: deviceSerialNumber,
 							locale: locale,
 							customerId: device.deviceOwnerCustomerId,
 							musicProviderId: node.payload.provider,
-							searchPhrase: node.payload.search,
+							searchPhrase: searchPhrase,
 						};
 
 						if (typeof node.payload.duration === 'number' && node.payload.duration !== 0) {
@@ -484,7 +533,7 @@ module.exports = function (RED) {
 						};
 
 						await alexa.validateRoutineNodeExt(native);
-						
+
 						native['@type'] = 'com.amazon.alexa.behaviors.model.OpaquePayloadOperationNode';
 						return native;
 					}
@@ -562,9 +611,9 @@ module.exports = function (RED) {
 						const device = find(node.payload.device);
 						const routine = alexa.findRoutineExt(node.payload.routine);
 						if (!routine) throw new Error(`could not find routine: "${node.payload.routine}"`);
-						
+
 						const routineNode = tools.clone(routine.sequence.startNode);
-	
+
 						tools.mapObjectValues(routineNode, (key, val) => {
 							if (key === 'deviceType' && val === 'ALEXA_CURRENT_DEVICE_TYPE') return device.deviceType;
 							if (key === 'deviceTypeId' && val === 'ALEXA_CURRENT_DEVICE_TYPE') return device.deviceType;
@@ -646,6 +695,9 @@ module.exports = function (RED) {
 
 			nativizeNode(evaluated).then(native => {
 				if(!native) { warn('no devices'); return; }
+
+				log(`request: "${JSON.stringify(native)}"`);
+
 				alexa.sendSequenceNodeExt(native).then(response => {
 					if(!tools.matches(response, { message: '' })) return response;
 					throw new Error(`Response: ${response.message}`);

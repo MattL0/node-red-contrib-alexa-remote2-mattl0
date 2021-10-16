@@ -53,6 +53,7 @@ const uiJsonBuilders = {
 		}
 	
 		return JSON.stringify(Array.from(alexa.deviceByIdExt.values())
+       		.filter(d => d.deviceFamily != 'WHA' || d.clusterMembers.length > 0)
 			.sort((a,b) => getSortValue(a) - getSortValue(b))
 			.map(x => [x.serialNumber, getLabel(x), x.capabilities])
 		);
@@ -302,10 +303,11 @@ module.exports = function (RED) {
 	function AlexaRemoteAccountNode(input) {
 		RED.nodes.createNode(this, input);
 
-		tools.assign(this, ['authMethod', 'proxyOwnIp', 'proxyPort', 'cookieFile', 'refreshInterval', 'alexaServiceHost', 'amazonPage', 'acceptLanguage', 'userAgent'], input);
+		tools.assign(this, ['authMethod', 'proxyOwnIp', 'proxyPort', 'cookieFile', 'refreshInterval', 'alexaServiceHost', 'amazonPage', 'acceptLanguage', 'onKeywordInLanguage', 'userAgent'], input);
 		this.useWsMqtt = input.useWsMqtt === 'on';
 		this.autoInit  = input.autoInit  === 'on';
 		this.name = input.name;
+		this.onKeywordInLanguage = input.onKeywordInLanguage;
 		this.locale = this.acceptLanguage;
 		this.refreshInterval = Number(this.refreshInterval) * 1000 * 60 * 60 * 24;
 		if(this.refreshInterval < 15000) this.refreshInterval = NaN;
@@ -410,7 +412,7 @@ module.exports = function (RED) {
 			// this.initing = true;
 
 			let config = {};
-			tools.assign(config, ['proxyOwnIp', 'proxyPort', 'alexaServiceHost', 'amazonPage', 'acceptLanguage', 'userAgent', 'useWsMqtt'], this);	
+			tools.assign(config, ['proxyOwnIp', 'proxyPort', 'alexaServiceHost', 'amazonPage', 'acceptLanguage', 'onKeywordInLanguage', 'userAgent', 'useWsMqtt'], this);
 			config.logger = this.debugCb;
 			config.refreshCookieInterval = 0;
 			config.proxyLogLevel = 'warn';
