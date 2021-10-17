@@ -233,7 +233,7 @@
 			authMethod: 		 { required: true,  value: 'proxy' },
 			proxyOwnIp:			 { required: true,  value: 'localhost' },
 			proxyPort:			 { required: true,  value: 3456, validate: x => 0 <= Number(x) && Number(x) <= 65535 },
-			cookieFile:			 { required: false, value: ''},
+			cookieFile:			 { required: true, value: ''},
 			refreshInterval:	 { required: false, value: '3'},
             alexaServiceHost:    { required: true,  value: 'pitangui.amazon.com' },
 			amazonPage:          { required: true,  value: 'amazon.com' },
