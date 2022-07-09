@@ -1,1 +1,1 @@
-Alexa-remote2 library is 5.3.0
+Alexa-remote2 library is 5.3.1
