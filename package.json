@@ -30,5 +30,5 @@
     "url": "https://github.com/586837r/node-red-contrib-alexa-remote2/issues"
 	},
 	"dependencies": {
-		"alexa-remote2": "5.10.1
+		"alexa-remote2": "5.10.1"
 	}}
