@@ -98,7 +98,7 @@ module.exports = function (RED) {
 										deviceType: devices[0].deviceType,
 										deviceSerialNumber: devices[0].serialNumber,
 										locale: locale,
-										customerId: devices[0].deviceOwnerCustomerId,
+										customerId: customerId,
 										textToSpeak: node.payload.text
 									}
 								};
@@ -123,7 +123,7 @@ module.exports = function (RED) {
 								type: 'AlexaAnnouncement',
 								operationPayload: {
 									expireAfter: 'PT5S',
-									customerId: devices.length === 0 ? customerId : devices[0].deviceOwnerCustomerId,
+									customerId: customerId,
 									content: [{
 										locale: locale,
 										display: {
@@ -136,7 +136,7 @@ module.exports = function (RED) {
 										}
 									}],
 									target: {
-										customerId: devices.length === 0 ? customerId : devices[0].deviceOwnerCustomerId,
+										customerId: customerId,
 										devices: devices.length === 0 ? undefined : devices.map(device => ({
 											deviceSerialNumber: device.serialNumber,
 											deviceTypeId: device.deviceType,
@@ -286,7 +286,7 @@ module.exports = function (RED) {
 								deviceType: devices[0].deviceType,
 								deviceSerialNumber: devices[0].serialNumber,
 								locale: locale,
-								customerId: devices[0].deviceOwnerCustomerId,
+								customerId: customerId,
 								text: node.payload.text
 							}
 						};
@@ -316,7 +316,7 @@ module.exports = function (RED) {
 							type: 'Alexa.DeviceControls.Stop',
 							skillId: 'amzn1.ask.1p.alexadevicecontrols',
 							operationPayload: {
-								customerId: devices[0].deviceOwnerCustomerId,
+								customerId: customerId,
 								devices: devices.map(device => ({
 									deviceSerialNumber: device.serialNumber,
 									deviceType: device.deviceType,
@@ -339,7 +339,7 @@ module.exports = function (RED) {
 								deviceType: devices[0].deviceType,
 								deviceSerialNumber: devices[0].serialNumber,
 								locale: locale,
-								customerId: devices[0].deviceOwnerCustomerId,
+								customerId: customerId,
 							}
 						};
 
@@ -368,7 +368,7 @@ module.exports = function (RED) {
 							type: 'Alexa.CannedTts.Speak',
 							skillId: 'amzn1.ask.1p.saysomething',
 							operationPayload: {
-								customerId: devices[0].deviceOwnerCustomerId,
+								customerId: customerId,
 								deviceType: devices[0].deviceType,
 								deviceSerialNumber: devices[0].serialNumber,
 								cannedTtsStringId: `alexa.cannedtts.speak.curatedtts-category-${node.payload.category}/alexa.cannedtts.speak.curatedtts-random`,
@@ -402,7 +402,7 @@ module.exports = function (RED) {
 							type: 'Alexa.Sound',
 							skillId: 'amzn1.ask.1p.sound',
 							operationPayload: {
-								customerId: devices[0].deviceOwnerCustomerId,
+								customerId: customerId,
 								deviceType: devices[0].deviceType,
 								deviceSerialNumber: devices[0].serialNumber,
 								soundStringId: node.payload.sound,
@@ -477,7 +477,7 @@ module.exports = function (RED) {
 									deviceType: devices[0].deviceType,
 									deviceSerialNumber: devices[0].serialNumber,
 									locale: locale,
-									customerId: devices[0].deviceOwnerCustomerId,
+									customerId: customerId,
 									value: volume,
 								}
 							};
@@ -518,7 +518,7 @@ module.exports = function (RED) {
 							deviceType: deviceType,
 							deviceSerialNumber: deviceSerialNumber,
 							locale: locale,
-							customerId: device.deviceOwnerCustomerId,
+							customerId: customerId,
 							musicProviderId: node.payload.provider,
 							searchPhrase: searchPhrase,
 						};
@@ -634,7 +634,7 @@ module.exports = function (RED) {
 							skillId: node.payload.skill,
 							operationPayload: {
 								locale: locale,
-								customerId: device.deviceOwnerCustomerId,
+								customerId: customerId,
 								targetDevice: {
 									deviceType: device.deviceType,
 									deviceSerialNumber: device.serialNumber
