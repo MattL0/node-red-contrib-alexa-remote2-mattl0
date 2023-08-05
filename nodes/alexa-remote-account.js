@@ -5,6 +5,7 @@ const EventEmitter = require('events');
 
 const AlexaRemote = require('../lib/alexa-remote-ext.js');
 const tools = require('../lib/common.js');
+const pjson = require('../package.json')
 
 // we are building all sorts of json payloads to send to the webpage when
 // initializing the account (can be updated via an 'update' query or account.updateAlexa)
@@ -419,6 +420,7 @@ module.exports = function (RED) {
 			config.cookieJustCreated = true; // otherwise it just tries forever...
 			config.bluetooth = false;
 			config.setupProxy = false;
+			config.apiUserAgentPostfix = pjson.name + '/' + pjson.version;
 
 			switch (this.authMethod) {
 				case 'proxy':
