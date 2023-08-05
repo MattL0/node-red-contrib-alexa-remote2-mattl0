@@ -9,6 +9,7 @@
         <select id="node-config-input-authMethod" style="width: 70%;">
             <option value="proxy">Proxy</option>
             <option value="cookie">Cookie</option>
+            <option value="password">Email & Password (deprecated)</option>
 		</select>
     </div>
     <div class="form-row">
@@ -33,7 +34,7 @@
 	</div>
 	<div class="form-row">
         <label for="node-config-input-cookieFile"><i class="fa fa-file"></i> File Path</label>
-        <input type="text" id="node-config-input-cookieFile" placeholder="Required">
+        <input type="text" id="node-config-input-cookieFile" placeholder="Optional">
 	</div>
 	<div class="form-row">
 		<label for="node-config-input-refreshInterval"><i class="fa fa-refresh"></i> Refresh</label>
@@ -214,8 +215,8 @@
 	<hr>
 	<h3><strong>References</strong></h3>
 	<ul>
-		<li><a href="https://www.npmjs.com/package/node-red-contrib-alexa-remote2-mattl0">npm</a> - the nodes npm repository</li>
-		<li><a href="https://github.com/MattL0/node-red-contrib-alexa-remote2-mattl0">GitHub</a> - the nodes GitHub repository
+		<li><a href="https://npmjs.com/package/node-red-contrib-alexa-remote2">npm</a> - the nodes npm repository</li>
+		<li><a href="https://github.com/586837r/node-red-contrib-alexa-remote2">GitHub</a> - the nodes GitHub repository
 		</li>
 	</ul>
 </script>
@@ -233,7 +234,7 @@
 			authMethod: 		 { required: true,  value: 'proxy' },
 			proxyOwnIp:			 { required: true,  value: 'localhost' },
 			proxyPort:			 { required: true,  value: 3456, validate: x => 0 <= Number(x) && Number(x) <= 65535 },
-			cookieFile:			 { required: true, value: ''},
+			cookieFile:			 { required: false, value: ''},
 			refreshInterval:	 { required: false, value: '3'},
             alexaServiceHost:    { required: true,  value: 'pitangui.amazon.com' },
 			amazonPage:          { required: true,  value: 'amazon.com' },
