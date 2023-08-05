@@ -74,8 +74,8 @@
 	<hr>
 	<h3><strong>References</strong></h3>
 	<ul>
-		<li><a href="https://npmjs.com/package/node-red-contrib-alexa-remote2-mattl0">npm</a> - the nodes npm repository</li>
-		<li><a href="https://github.com/MattL0/node-red-contrib-alexa-remote2-mattl0">GitHub</a> - the nodes GitHub repository
+		<li><a href="https://npmjs.com/package/node-red-contrib-alexa-remote2">npm</a> - the nodes npm repository</li>
+		<li><a href="https://github.com/586837r/node-red-contrib-alexa-remote2">GitHub</a> - the nodes GitHub repository
 		</li>
 	</ul>
 </script>
@@ -1118,6 +1118,9 @@
 						});
 					},
 				});
+			const disclaimerHeader = $('<h3>Please avoid polling!</h3>').insertBefore(inputs);
+			const disclaimerText = $('<p>If your use-case requires it, you must keep the interval above 5 minutes, otherwise an error will be thrown.</p>').css({ margin: '0px 0px 24px 0px' }).insertBefore(inputs);
+
 			const select = arSelect(data.option, ['get', 'query', 'action', 'discover', 'forget']);
 			arFormRow(select, 'Select', 'fa fa-sort').insertBefore(inputs);
 			const divider = $('<hr>').css({ margin: '12px 0px' }).insertBefore(inputs);
