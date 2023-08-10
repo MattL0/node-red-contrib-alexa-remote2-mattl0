@@ -56,6 +56,13 @@
 			<option value="off">Off</option>
 		</select>
 	</div>
+	<div class="form-row">
+        <label for="node-config-input-usePushConnectType"><i class="fa fa-rocket"></i> Events Connect Type</label>
+		<select id="node-config-input-usePushConnectType" style="width: 70%;">
+			<option value="1">1</option>
+			<option value="2">2</option>
+		</select>
+	</div>
 	<hr>
     <div class="form-row">
         <label for="node-config-input-alexaServiceHost"><i class="fa fa-amazon"></i> Service Host</label>
@@ -157,12 +164,6 @@
 					</tr>
 				</thead>
 				<tbody>
-				         <tr>
-						<td>Canada</td>
-						<td><a href="http://amazon.ca">alexa.amazon.ca</a></td>
-						<td><a href="http://amazon.ca">amazon.ca</a></td>
-						<td>de-DE</td>
-					</tr>
 					<tr>
 						<td>USA</td>
 						<td><a href="http://pitangui.amazon.com">pitangui.amazon.com</a></td>
@@ -242,6 +243,7 @@
             onKeywordInLanguage: { required: false, value: 'on' },
             userAgent:           { required: false, value: '' },
 			useWsMqtt:			 { required: true,  value: 'on' },
+			usePushConnectType:  { required: true,  value: '1' },
 			autoInit:			 { required: true,  value: 'on' }
 		},
 		paletteLabel: 'Alexa Account',
